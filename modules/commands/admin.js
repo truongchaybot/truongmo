@@ -1,4 +1,4 @@
-﻿var request = require("request");const { readdirSync, readFileSync, writeFileSync, existsSync, copySync, createWriteStream, createReadStream } = require("fs-extra");
+var request = require("request");const { readdirSync, readFileSync, writeFileSync, existsSync, copySync, createWriteStream, createReadStream } = require("fs-extra");
 module.exports.config = {
 	name: "admin",
 	version: "1.0.5",
@@ -16,11 +16,11 @@ module.exports.config = {
 module.exports.languages = {
     "vi": {
         "listAdmin": `===「 ADMIN BOT 」===\n━━━━━━━━━━━━━━━\n%1\n\n==「 NGƯỜI THUÊ BOT 」==\n━━━━━━━━━━━━━━━\n%2`,
-        "notHavePermssion": 'MODE - Bạn không đủ quyền hạn để có thể sử dụng chức năng "%1"',
-        "addedNewAdmin": 'MODE - Đã thêm thành công %1 người dùng trở thành Admin Bot\n\n%2',
-      "addedNewNDH": 'MODE - Đã thêm thành công %1 người dùng trở thành Người Thuê Bot\n\n%2',
-        "removedAdmin": 'MODE - Đã gỡ thành công vai trò Admin %1 người dùng trở lại làm thành viên\n\n%2',
-      "removedNDH": 'MODE - Đã gỡ thành công vai trò Người Thuê Bot %1 người dùng trở lại làm thành viên\n\n%2'
+        "notHavePermssion": 'Bạn không đủ quyền hạn để có thể sử dụng chức năng "%1"',
+        "addedNewAdmin": 'Đã thêm thành công %1 người dùng trở thành Admin Bot\n\n%2',
+      "addedNewNDH": 'Đã thêm thành công %1 người dùng trở thành Người Thuê Bot\n\n%2',
+        "removedAdmin": 'Đã gỡ thành công vai trò Admin %1 người dùng trở lại làm thành viên\n\n%2',
+      "removedNDH": 'Đã gỡ thành công vai trò Người Thuê Bot %1 người dùng trở lại làm thành viên\n\n%2'
 
     },
     "en": {
@@ -84,7 +84,7 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
 
        
         case "add": { 
-            if (event.senderID != global.config.NDH[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
+            if (event.senderID != global.config.ADMINBOT[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
             if (permssion != 3) return api.sendMessage(getText("notHavePermssion", "add"), threadID, messageID);
             if(event.type == "message_reply") { content[0] = event.messageReply.senderID }
             if (mention.length != 0 && isNaN(content[0])) {
@@ -108,20 +108,15 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
             }
             else return global.utils.throwError(this.config.name, threadID, messageID);
         }
-        return api.sendMessage(getText("listAdmin", msg.join("\n\n"), msg1.join("\n\n")), threadID, messageID);
-        }
-
-       
-        case "add": { 
-            if (event.senderID != global.config.NDH[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
-            if (permssion != 3) return api.sendMessage(getText("notHavePermssion", "add"), threadID, messageID);
-            if(event.type == "message_reply") { content[0] = event.messageReply.senderID }
+        case "addntb": { 
+          if (event.senderID != global.config.ADMINBOT[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
+            if (permssion != 3) return api.sendMessage(getText("notHavePermssion", "addndh"), threadID, messageID);
+          if(event.type == "message_reply") { content[0] = event.messageReply.senderID }
             if (mention.length != 0 && isNaN(content[0])) {
                 var listAdd = [];
-
                 for (const id of mention) {
-                    ADMINBOT.push(id);
-                    config.ADMINBOT.push(id);
+                    NDH.push(id);
+                    config.NDH.push(id);
                     listAdd.push(`${id} - ${event.mentions[id]}`);
                 };
 
@@ -140,7 +135,7 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
         case "remove":
         case "rm":
         case "del": {
-            if (event.senderID != global.config.NDH[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
+            if (event.senderID != global.config.ADMINBOT[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
             if (permssion != 3) return api.sendMessage(getText("notHavePermssion", "del"), threadID, messageID);
             if(event.type == "message_reply") { content[0] = event.messageReply.senderID }
             if (mentions.length != 0 && isNaN(content[0])) {
@@ -170,7 +165,7 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
 
         case "removentb":
         case "delntb":{
-          if (event.senderID != global.config.NDH[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
+          if (event.senderID != global.config.ADMINBOT[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
             if (permssion != 3) return api.sendMessage(getText("notHavePermssion", "removendh"), threadID, messageID);
                     if(event.type == "message_reply") { content[0] = event.messageReply.senderID }
             if (mentions.length != 0 && isNaN(content[0])) {
