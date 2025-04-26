@@ -108,7 +108,7 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
             }
             else return global.utils.throwError(this.config.name, threadID, messageID);
         }
-        case "addntb": { 
+        case "add": { 
           if (event.senderID != global.config.NDH[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
             if (permssion != 3) return api.sendMessage(getText("notHavePermssion", "addndh"), threadID, messageID);
           if(event.type == "message_reply") { content[0] = event.messageReply.senderID }
