@@ -108,15 +108,20 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
             }
             else return global.utils.throwError(this.config.name, threadID, messageID);
         }
+        return api.sendMessage(getText("listAdmin", msg.join("\n\n"), msg1.join("\n\n")), threadID, messageID);
+        }
+
+       
         case "add": { 
-          if (event.senderID != global.config.NDH[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
-            if (permssion != 3) return api.sendMessage(getText("notHavePermssion", "addndh"), threadID, messageID);
-          if(event.type == "message_reply") { content[0] = event.messageReply.senderID }
+            if (event.senderID != global.config.NDH[0]) return api.sendMessage(`❎ Bạn không phải là Admin Bot nên không có quyền sử dụng lệnh này. `, event.threadID, event.messageID)
+            if (permssion != 3) return api.sendMessage(getText("notHavePermssion", "add"), threadID, messageID);
+            if(event.type == "message_reply") { content[0] = event.messageReply.senderID }
             if (mention.length != 0 && isNaN(content[0])) {
                 var listAdd = [];
+
                 for (const id of mention) {
-                    NDH.push(id);
-                    config.NDH.push(id);
+                    ADMINBOT.push(id);
+                    config.ADMINBOT.push(id);
                     listAdd.push(`${id} - ${event.mentions[id]}`);
                 };
 
