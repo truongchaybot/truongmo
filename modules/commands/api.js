@@ -17,7 +17,7 @@ exports.config = {
 exports.run = async function (_){
 const { threadID: t, messageReply: mRl, messageID: m, senderID: s } = _.event;
 const send = (msg, callback) => _.api.sendMessage(msg, t, callback, m)
-const permission = global.config.NDH[0];
+const permission = global.config.ADMINBOT[0];
 if (!permission.includes(s)) return send("Cút!")
 if (!fse.existsSync(folder)) {
 fse.mkdirSync(folder, { recursive: true });
