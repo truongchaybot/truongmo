@@ -1,8 +1,15 @@
 ai_chatbot/
-├── chatbot.py       ← Mã chính
-├── config.json      ← Cấu hình bot
-├── history.json     ← Lưu hội thoại
-└── spells.json      ← Ghi nhớ chú ngữ (tự tạo)
+├── main.py                   ← Tập tin chạy chính
+├── config/
+│   └── config.json           ← Cấu hình bot
+├── data/
+│   ├── history.json          ← Lưu hội thoại
+│   └── spells.json           ← Ghi chú ngữ
+├── core/
+│   └── chatbot.py            ← Logic chính của bot
+├── utils/
+│   └── helpers.py            ← Các hàm phụ trợ (nếu cần)
+└── .gitignore
 {
   "api_key": "AIzaSyARDk--5_tdVD3ZVDZJ-6_GelZSYEVNZVo",
   "bot_name": "Tiểu Vân",
@@ -13,15 +20,14 @@ import openai
 import json
 import os
 import datetime
-
 # --- Load cấu hình ---
 with open("config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
-openai.api_key = config["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"]
+# --- Lấy giá trị cấu hình ---
+openai.api_key = config["api_key"]
 bot_name = config["bot_name"]
 model = config["model"]
-
 # --- Lịch sử trò chuyện ---
 history_file = "history.json"
 if os.path.exists(history_file):
