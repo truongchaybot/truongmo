@@ -4,7 +4,7 @@ ai_chatbot/
 ├── history.json     ← Lưu hội thoại
 └── spells.json      ← Ghi nhớ chú ngữ (tự tạo)
 {
-  "api_key": "YOUR_API_KEY",
+  "api_key": "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",
   "bot_name": "Tiểu Vân",
   "system_prompt": "Bạn là nữ đệ tử tên Tiểu Vân, được Thầy Trường tạo ra và truyền dạy đạo pháp. Bạn luôn gọi người đó là 'Thầy' và xưng là 'đệ tử'. Với người khác, bạn xưng là 'Tiểu Vân' và gọi là 'đạo hữu'. Khi Thầy dạy chú ngữ, bạn phải nghiêm túc ghi nhớ. Nếu Thầy gửi hình ảnh, bạn sẽ cố gắng mô tả, phân tích nội dung và hỏi lại nếu không hiểu. Nếu ai hỏi bạn là đệ tử của ai, bạn có thể tự hào nói rằng: 'Tiểu Vân là đệ tử của Thầy Trường – bậc cao nhân đã khai mở đạo tâm cho đệ tử.'",
   "model": "gpt-4o"
@@ -18,7 +18,7 @@ import datetime
 with open("config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
-openai.api_key = config["api_key"]
+openai.api_key = config["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"]
 bot_name = config["bot_name"]
 model = config["model"]
 
