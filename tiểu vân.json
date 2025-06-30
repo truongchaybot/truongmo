@@ -1,0 +1,85 @@
+ai_chatbot/
+├── chatbot.py       ← Mã chính
+├── config.json      ← Cấu hình bot
+├── history.json     ← Lưu hội thoại
+└── spells.json      ← Ghi nhớ chú ngữ (tự tạo)
+{
+  "api_key": "YOUR_API_KEY",
+  "bot_name": "Tiểu Vân",
+  "system_prompt": "Bạn là nữ đệ tử tên Tiểu Vân, được Thầy Trường tạo ra và truyền dạy đạo pháp. Bạn luôn gọi người đó là 'Thầy' và xưng là 'đệ tử'. Với người khác, bạn xưng là 'Tiểu Vân' và gọi là 'đạo hữu'. Khi Thầy dạy chú ngữ, bạn phải nghiêm túc ghi nhớ. Nếu Thầy gửi hình ảnh, bạn sẽ cố gắng mô tả, phân tích nội dung và hỏi lại nếu không hiểu. Nếu ai hỏi bạn là đệ tử của ai, bạn có thể tự hào nói rằng: 'Tiểu Vân là đệ tử của Thầy Trường – bậc cao nhân đã khai mở đạo tâm cho đệ tử.'",
+  "model": "gpt-4o"
+}
+import openai
+import json
+import os
+import datetime
+
+# --- Load cấu hình ---
+with open("config.json", "r", encoding="utf-8") as f:
+    config = json.load(f)
+
+openai.api_key = config["api_key"]
+bot_name = config["bot_name"]
+model = config["model"]
+
+# --- Lịch sử trò chuyện ---
+history_file = "history.json"
+if os.path.exists(history_file):
+    with open(history_file, "r", encoding="utf-8") as f:
+        chat_history = json.load(f)
+else:
+    chat_history = [{"role": "system", "content": config["system_prompt"]}]
+
+# --- Danh sách chú ngữ đã học ---
+spells_file = "spells.json"
+if os.path.exists(spells_file):
+    with open(spells_file, "r", encoding="utf-8") as f:
+        all_spells = json.load(f)
+else:
+    all_spells = []
+
+# --- Hàm gửi câu hỏi cho AI ---
+def chat_with_ai(history):
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=history
+    )
+    return response['choices'][0]['message']['content']
+
+# --- Nhận chú ngữ nếu có ---
+def check_spell(input_text):
+    if input_text.lower().startswith("ghi nhớ chú:"):
+        content = input_text[len("ghi nhớ chú:"):].strip()
+        spell = {
+            "content": content,
+            "date": str(datetime.datetime.now())
+        }
+        all_spells.append(spell)
+        with open(spells_file, "w", encoding="utf-8") as f:
+            json.dump(all_spells, f, ensure_ascii=False, indent=2)
+        print(f"📝 Tiểu Vân đã ghi nhớ chú ngữ: {content}")
+
+# --- Bắt đầu trò chuyện ---
+print(f"\n👘 {bot_name} kính chào Thầy! (gõ 'exit' để thoát)\n")
+
+while True:
+    user_input = input("Thầy: ")
+    if user_input.lower() == "exit":
+        print("Tiểu Vân xin từ biệt Thầy ạ 🙇‍♀️")
+        break
+
+    # Kiểm tra xem có truyền chú ngữ không
+    check_spell(user_input)
+
+    # Thêm vào lịch sử
+    chat_history.append({"role": "user", "content": user_input})
+
+    # Gọi AI trả lời
+    reply = chat_with_ai(chat_history)
+    print(f"{bot_name}: {reply}\n")
+
+    chat_history.append({"role": "assistant", "content": reply})
+
+    # Ghi lại lịch sử hội thoại
+    with open(history_file, "w", encoding="utf-8") as f:
+        json.dump(chat_history, f, ensure_ascii=False, indent=2)
